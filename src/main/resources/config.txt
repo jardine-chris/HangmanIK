@@ -1,0 +1,9 @@
+// This file allows you to store and automatically load your login information.
+// Make sure you don't remove anything. A proper configuration would be:
+// nickname%hangmanikbot
+// channel%#testchannel
+// oauth%oauth:asdfghjkl1234567
+
+nickname%
+channel%#
+oauth%oauth:
