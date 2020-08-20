@@ -9,7 +9,7 @@ import java.io.IOException;
  * @author Chris Jardine
  * @version 1.0
  */
-public class Driver {
+public class EntryPoint {
 
     public static void main(String[] args) throws IOException {
         LoginWindow window = new LoginWindow();
