@@ -1,3 +1,4 @@
+import db.LeaderboardDB;
 import swing.LoginWindow;
 
 import java.io.IOException;
@@ -10,8 +11,7 @@ import java.io.IOException;
  */
 public class Driver {
 
-        public static void main(String[] args) throws IOException {
-
-            LoginWindow window = new LoginWindow();
+    public static void main(String[] args) throws IOException {
+        LoginWindow window = new LoginWindow();
         }
     }

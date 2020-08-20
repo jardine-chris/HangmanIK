@@ -15,6 +15,7 @@ import hangman.Guess;
 public class Commands implements TwirkListener {
 
     Twirk client;
+
     String[] commands = {
             "guess",
             "solve"
@@ -35,75 +36,82 @@ public class Commands implements TwirkListener {
      */
     @Override
     public void onPrivMsg(TwitchUser sender, TwitchMessage message) {
-        // Only react to commands if the game is running.
-        if (Game.gameIsRunning) {
-            // Parse the message that was sent.
-            String[] parsedMessage = cleanParse(message.getContent());
-            // Verify the command is valid.
-            if (validCommand(parsedMessage)) {
-                // Create a Guess object from the parsed message.
-                Guess guess = new Guess(parsedMessage[2]);
+        String msg = message.getContent().toLowerCase();
+        if (msg.startsWith("!hm")) {
+            if (Game.gameIsRunning) {
+                // Parse the message that was sent.
+                String[] parsedMessage = cleanParse(message.getContent());
+                // Verify the command is valid.
+                if (validCommand(parsedMessage)) {
+                    // Create a Guess object from the parsed message.
+                    Guess guess = new Guess(parsedMessage[2]);
 
-                // React based on what the command was (after !hm).
-                switch (parsedMessage[1].toLowerCase()) {
-                    // If the user is guessing a letter.
-                    case "guess":
-                        // If the letter hasn't been guessed yet.
-                        if (!Game.playingWord.checkIfGuessed(guess.getGuess())) {
-                            // Keep track of how many occurences of the guessed
-                            // letter there are.
-                            int numRight = Game.playingWord.checkGuess(guess);
-                            // If 1 instance, send a singular statement.
-                            if (numRight == 1) {
-                                client.channelMessage("There is 1 "
-                                        + guess.getGuess() + "! "
-                                        + Game.playingWord.toString());
-                            }
-                            // If multiple instances, send a plural statement.
-                            else if (numRight >= 2) {
-                                client.channelMessage("There are " + numRight
-                                        + " " + guess.getGuess() + "s! "
-                                        + Game.playingWord.toString());
+                    // React based on what the command was (after !hm).
+                    switch (parsedMessage[1].toLowerCase()) {
+                        // If the user is guessing a letter.
+                        case "guess":
+                            // If the letter hasn't been guessed yet.
+                            if (!Game.playingWord.checkIfGuessed(guess.getGuess())) {
+                                // Keep track of how many occurences of the guessed
+                                // letter there are.
+                                int numRight = Game.playingWord.checkGuess(guess);
+                                // If 1 instance, send a singular statement.
+                                if (numRight == 1) {
+                                    client.channelMessage("There is 1 "
+                                            + guess.getGuess() + "! "
+                                            + Game.playingWord.toString());
+                                    Game.db.addCorrectGuesses(sender.getUserName(), 1);
+                                }
+                                // If multiple instances, send a plural statement.
+                                else if (numRight >= 2) {
+                                    client.channelMessage("There are " + numRight
+                                            + " " + guess.getGuess() + "s! "
+                                            + Game.playingWord.toString());
+                                    Game.db.addCorrectGuesses(sender.getUserName(), numRight);
+                                }
 
+                                // Otherwise the letter wasn't in the word.
+                                else {
+                                    client.channelMessage(guess.getGuess()
+                                            + " isn't in the word!");
+                                    Game.db.addInorrectGuesses(sender.getUserName());
+                                }
                             }
-                            // Otherwise the letter wasn't in the word.
+                            // Otherwise the letter has already been guessed.
                             else {
                                 client.channelMessage(guess.getGuess()
-                                        + " isn't in the word!");
+                                        + " has already been guessed!");
                             }
-                        }
-                        // Otherwise the letter has already been guessed.
-                        else {
-                            client.channelMessage(guess.getGuess()
-                                    + " has already been guessed!");
-                        }
-                        break;
+                            break;
 
-                    // If the user is trying to guess the word.
-                    case "solve":
+                        // If the user is trying to guess the word.
+                        case "solve":
 
-                        boolean isRight = Game.playingWord.checkSolve(parsedMessage[2]);
-                        if (isRight) {
-                            client.channelMessage(sender.getDisplayName()
-                                    + " guessed the word '"
-                                    + Game.playingWord.getWord() + "'!");
-                            Game.gameIsRunning = false;
-                        }
-                        else {
-                            client.channelMessage("'" + parsedMessage[2] + "'"
-                                    + " is incorrect!");
-                        }
-                        break;
-                    default:
-                        break;
+                            boolean isRight = Game.playingWord.checkSolve(parsedMessage[2]);
+                            if (isRight) {
+                                client.channelMessage(sender.getDisplayName()
+                                        + " guessed the word '"
+                                        + Game.playingWord.getWord() + "'!");
+                                Game.db.addGamesWon(sender.getUserName());
+                                Game.gameIsRunning = false;
+                            } else {
+                                client.channelMessage("'" + parsedMessage[2] + "'"
+                                        + " is incorrect!");
+                                Game.db.addInorrectGuesses(sender.getUserName());
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
+            // Otherwise the game isn't running.
+            else {
+                client.channelMessage("A HangmanIK game isn't being played! Ask " +
+                        "the host to start it :)");
+            }
         }
-        // Otherwise the gam
-        else {
-            client.channelMessage("A HangmanIK game isn't being played! Ask " +
-                    "the host to start it :)");
-        }
+
     }
 
     /**

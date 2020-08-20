@@ -1,5 +1,6 @@
 package bot;
 
+import db.LeaderboardDB;
 import hangman.RandomWord;
 import hangman.Word;
 import swing.LoginWindow;
@@ -18,8 +19,9 @@ import java.io.IOException;
 public class Game {
 
     Client client;
-    public static Word playingWord;
+    static LeaderboardDB db = new LeaderboardDB();
 
+    public static Word playingWord;
     public static boolean gameIsRunning;
 
     /**
@@ -106,7 +108,6 @@ public class Game {
             if (n == 0) {
                 client.getClient().channelMessage(client.getClient().getNick() + " has started HangmanIK! The word is: " + playingWord.toString());
                 gameIsRunning = true;
-
             }
             // New Word = 1
             else if (n == 1) {
@@ -127,7 +128,6 @@ public class Game {
             // indicate a bug in the code if it's thrown.
             label.setText("ERROR: IOException!");
             JOptionPane.showMessageDialog(null, label);
-
         }
     }
 }
