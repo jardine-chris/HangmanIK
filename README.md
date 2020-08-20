@@ -1,7 +1,7 @@
 # HangmanIK
 ###### Developed by Chris Jardine
 
-## *Verison 1.0*
+## *Verison 1.1*
 The initial commit has basic functionality, allowing the bot owner to enter a word of their choice or generate a random word. At the
 moment, the "random" words are stored in a local file, though I've considered hooking into a word generating API.<br>
 The project hasn't been fully tested, so there are most likely some annoying bugs.
