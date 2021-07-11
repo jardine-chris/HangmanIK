@@ -24,6 +24,16 @@ Phrases can be used rather than single words. Hyphenated words are also allowed.
 
 ---
 
+## How to Play
+Once the game has started, users can type `!hm [guess | solve] [letter | word]`.<br>
+For example:<br>
+To guess the letter _C_, a user would type `!hm guess c`.<br>
+To guess the word _TECHNOLOGY_, a user would type `!hm solve technology`.<br>
+
+_Note: commands are not case-sensitive._
+
+---
+
 ## Plans for Future Releases
 - REFACTORING
 - Add a leaderboard

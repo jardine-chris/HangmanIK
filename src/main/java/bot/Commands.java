@@ -22,7 +22,7 @@ public class Commands implements TwirkListener {
     };
 
     /**
-     * Default consntructor connects to the client.
+     * Default constructor connects to the client.
      * @param client The client.
      */
     public Commands(Twirk client) {
